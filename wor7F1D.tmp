@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3 uid="uid://r0ydwqfe7a18"]
+
+[ext_resource type="Script" path="res://Gracz.gd" id="1_wwknb"]
+[ext_resource type="PackedScene" uid="uid://pbihp5jh67j1" path="res://walls.tscn" id="2_28kxe"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_gavr1"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_vdk1b"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_htk5b"]
+size = Vector2(24, 261)
+
+[node name="World" type="Node2D"]
+
+[node name="Tło" type="Sprite2D" parent="."]
+modulate = Color(0.47451, 0.47451, 0.47451, 1)
+position = Vector2(575.5, 323)
+scale = Vector2(1149, 646)
+texture = SubResource("CanvasTexture_gavr1")
+
+[node name="Gracz" type="CharacterBody2D" parent="."]
+position = Vector2(9, 2)
+slide_on_ceiling = false
+platform_floor_layers = 4294967041
+platform_wall_layers = 1
+script = ExtResource("1_wwknb")
+
+[node name="Platforma" type="Sprite2D" parent="Gracz"]
+position = Vector2(13, 323)
+scale = Vector2(23, 261)
+texture = SubResource("CanvasTexture_vdk1b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gracz"]
+position = Vector2(13, 323.5)
+shape = SubResource("RectangleShape2D_htk5b")
+
+[node name="walls" parent="." instance=ExtResource("2_28kxe")]
+position = Vector2(-1, 2)
+
+[node name="walls2" parent="." instance=ExtResource("2_28kxe")]
+position = Vector2(0, 619)
+disable_mode = 1

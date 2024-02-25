@@ -1,0 +1,132 @@
+[gd_scene load_steps=13 format=3 uid="uid://r0ydwqfe7a18"]
+
+[ext_resource type="Script" path="res://Scripts/Gracz.gd" id="1_xymn6"]
+[ext_resource type="PackedScene" uid="uid://pbihp5jh67j1" path="res://Scenes/walls.tscn" id="2_l5peu"]
+[ext_resource type="Script" path="res://Scripts/Piłka.gd" id="3_32unh"]
+[ext_resource type="Texture2D" uid="uid://cy2v8eu18cwkt" path="res://Images/Pilka.png" id="4_w5u1b"]
+[ext_resource type="Script" path="res://Scripts/Komputer.gd" id="5_qgppv"]
+[ext_resource type="Script" path="res://Scripts/Score.gd" id="6_7dxf0"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_gavr1"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_vdk1b"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_htk5b"]
+size = Vector2(20, 174)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vwkce"]
+radius = 15.1327
+
+[sub_resource type="GDScript" id="GDScript_wxt50"]
+script/source = "extends Label
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+"
+
+[sub_resource type="GDScript" id="GDScript_gj4ym"]
+script/source = "extends Label
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	text = \"0\"
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+"
+
+[node name="World" type="Node2D"]
+
+[node name="Tło" type="Sprite2D" parent="."]
+modulate = Color(0.47451, 0.47451, 0.47451, 1)
+position = Vector2(575.5, 323)
+scale = Vector2(1149, 646)
+texture = SubResource("CanvasTexture_gavr1")
+
+[node name="Gracz" type="CharacterBody2D" parent="."]
+position = Vector2(9, 2)
+script = ExtResource("1_xymn6")
+
+[node name="Platforma" type="Sprite2D" parent="Gracz"]
+position = Vector2(14, 324)
+scale = Vector2(20, 174)
+texture = SubResource("CanvasTexture_vdk1b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gracz"]
+position = Vector2(13, 323)
+shape = SubResource("RectangleShape2D_htk5b")
+
+[node name="wall" parent="." instance=ExtResource("2_l5peu")]
+position = Vector2(-1, 2)
+
+[node name="wall2" parent="." instance=ExtResource("2_l5peu")]
+position = Vector2(0, 619)
+disable_mode = 1
+
+[node name="Piłka" type="RigidBody2D" parent="."]
+freeze = true
+script = ExtResource("3_32unh")
+
+[node name="Sprite2D" type="Sprite2D" parent="Piłka"]
+position = Vector2(535, 317)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("4_w5u1b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Piłka"]
+position = Vector2(535, 316)
+shape = SubResource("CircleShape2D_vwkce")
+
+[node name="Komputer" type="CharacterBody2D" parent="."]
+script = ExtResource("5_qgppv")
+
+[node name="Platforma" type="Sprite2D" parent="Komputer"]
+position = Vector2(1129, 322)
+scale = Vector2(20, 174)
+texture = SubResource("CanvasTexture_vdk1b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Komputer"]
+position = Vector2(1129, 322)
+shape = SubResource("RectangleShape2D_htk5b")
+
+[node name="Score" type="Node2D" parent="."]
+position = Vector2(236, 115)
+script = ExtResource("6_7dxf0")
+
+[node name="PlayerScore" type="Label" parent="Score"]
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 40
+script = SubResource("GDScript_wxt50")
+
+[node name="ComputerScore" type="Label" parent="Score"]
+offset_left = 570.0
+offset_top = -1.0
+offset_right = 610.0
+offset_bottom = 54.0
+theme_override_font_sizes/font_size = 40
+script = SubResource("GDScript_gj4ym")
+
+[node name="WhoWin" type="Label" parent="Score"]
+offset_left = 279.0
+offset_top = 162.0
+offset_right = 319.0
+offset_bottom = 245.0
+theme_override_font_sizes/font_size = 60
+horizontal_alignment = 1
+
+[connection signal="ballDirection" from="Piłka" to="Komputer" method="_on_piłka_ball_direction"]
+[connection signal="body_entered" from="Piłka" to="Piłka" method="_on_body_entered"]
+[connection signal="body_shape_entered" from="Piłka" to="Piłka" method="_on_body_shape_entered"]
+[connection signal="computerScore" from="Piłka" to="Score" method="_on_piłka_computer_score"]
+[connection signal="playerScore" from="Piłka" to="Score" method="_on_piłka_player_score"]
+[connection signal="theend" from="Score" to="Piłka" method="_on_score_theend"]
